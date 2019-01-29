@@ -1,0 +1,31 @@
+version: "3.1"
+
+services:
+    online-voting:
+        image: ieeeuottawa/online-voting
+        ports:
+          - "8080:8080"
+        depends_on:
+          - online-voting-db
+        links:
+          - online-voting-db
+    online-voting-db:
+        image: postgres:11
+        ports:
+          - "5432:5432"
+        environment:
+          - POSTGRES_USER_FILE=/run/secrets/db_user
+          - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+          - POSTGRES_DB_FILE=/run/secrets/db_name
+        secrets:
+          - db_user
+          - db_password
+          - db_name
+
+secrets:
+  db_user:
+    file: ./secrets/db_user.secret
+  db_password:
+    file: ./secrets/db_password.secret
+  db_name:
+    file: ./secrets/db_name.secret
