@@ -1,8 +1,12 @@
 const jwt = require('jsonwebtoken');
 
+const userModel = require('./models/user_model');
+
 const authRegex = /Bearer (.+)/;
 
 const extractToken = (authHeader) => authRegex.exec(authHeader)[1];
+
+module.exports.extractToken = extractToken;
 
 module.exports.generateToken = (email) => {
     return new Promise((resolve, reject) => {
@@ -13,7 +17,7 @@ module.exports.generateToken = (email) => {
     });
 };
 
-module.exports.validateToken = (req, res, next) => {
+const validateToken = (req, res, next) => {
     const { headers: { authorization } } = req;
     const token = extractToken(authorization);
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
@@ -28,4 +32,34 @@ module.exports.validateToken = (req, res, next) => {
     });
 };
 
-module.exports.extractToken = extractToken;
+module.exports.validateToken = validateToken;
+
+const validateUser = async (email, res, next) => {
+    const canVote = await userModel.canUserVote(email);
+
+    if (!canVote) {
+        console.log(`User ${email} is not allowed to vote!`);
+        return res.status(401).send(null);
+    }
+
+    const hasVoted = await userModel.hasUserVoted(email);
+    if (hasVoted) {
+        console.log(`User ${email} has already voted!`);
+        return res.status(409).send(null);
+    }
+
+    next();
+};
+
+module.exports.verifyUser = async (req, res, next) => {
+    const { body: { email } } = req;
+
+    if (!email) {
+        validateToken(req, res, async () => {
+            const { auth: { email } } = req;
+            await validateUser(email, res, next);
+        });
+    } else {
+        await validateUser(email, res, next);
+    }
+};

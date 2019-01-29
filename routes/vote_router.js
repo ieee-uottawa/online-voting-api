@@ -1,9 +1,9 @@
 const app = require('express').Router();
 
 const voteController = require('../controllers/vote_controller');
-const { validateToken } = require('../auth');
+const { verifyUser } = require('../auth');
 
 app.get('/candidates', voteController.getCandidates);
-app.post('/submit', validateToken, voteController.submitVote);
+app.post('/submit', verifyUser, voteController.submitVote);
 
 module.exports = app;
