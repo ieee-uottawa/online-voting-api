@@ -1,8 +1,4 @@
-const { Pool } = require('pg');
-
-// pools will use environment variables
-// for connection information
-const db = new Pool();
+const { db } = require('../db');
 
 module.exports.hasUserVoted = async (email) => {
     const { rows: [{ has_voted: hasVoted }] } = await db.query('SELECT has_voted FROM valid_users WHERE email = $1;', [email]);
