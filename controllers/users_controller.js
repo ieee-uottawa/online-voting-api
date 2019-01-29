@@ -24,7 +24,7 @@ module.exports.verifyUser = async ({ headers: { authorization } }, res) => {
                 console.log(`User ${email} logged in with an invalid email`);
                 return res.status(401).send(null);
             } else {
-                token = generateToken(email);
+                token = await generateToken(email);
             }
         } else {
             console.log('Invalid Google credentials');
