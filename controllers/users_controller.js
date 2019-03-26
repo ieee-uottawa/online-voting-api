@@ -3,7 +3,6 @@ const fs = require('fs');
 const { promisify } = require('util');
 
 const { generateToken, extractToken } = require('../auth');
-const userModel = require('../models/user_model');
 
 const readFileAsync = promisify(fs.readFile);
 
@@ -29,18 +28,6 @@ module.exports.verifyUser = async ({ headers: { authorization } }, res) => {
         } else {
             console.log('Invalid Google credentials');
             return res.status(500).send(null);
-        }
-
-        const canVote = await userModel.canUserVote(email);
-        if (!canVote) {
-            console.log(`User ${email} is not allowed to vote!`);
-            return res.status(401).send(null);
-        }
-
-        const hasVoted = await userModel.hasUserVoted(email);
-        if (hasVoted) {
-            console.log(`User ${email} has already voted!`);
-            return res.status(409).send(null);
         }
     }
 

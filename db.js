@@ -9,7 +9,7 @@ const IsolationLevel = {
 
 const db = new Pool();
 db.transaction = async (isolationLevel, body) => {
-    const client = await this.db.connect();
+    const client = await db.connect();
 
     try {
         await client.query(`BEGIN TRANSACTION ISOLATION LEVEL ${isolationLevel};`);

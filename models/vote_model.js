@@ -21,6 +21,6 @@ module.exports.submitVote = async (email, candidateIDs) => {
             await client.query(updateQuery, [id]);
         });
 
-        await client.query('UPDATE valid_users SET has_voted = TRUE WHERE email = $1;', [email]);
+        await client.query('INSERT INTO voted_users (email) VALUES ($1);', [email]);
     });
 };
