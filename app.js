@@ -4,14 +4,15 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const domains = ['http://localhost:3000', 'https://vote.ieeeuottawa.ca'];
 const app = express();
 const corsOptions = {
-    origin: 'http://localhost:8080',
+    origin: domains,
     optionsSuccessStatus: 200,
 };
 
-app.use(cors());
-app.options('*', cors());
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
 app.use(logger('dev'));
 app.use(express.json());
