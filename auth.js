@@ -22,13 +22,13 @@ const validateToken = (req, res, next) => {
     const token = extractToken(authorization);
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (!err) {
-            req.auth = decoded
+            req.auth = decoded;
             next();
         }
         else {
             console.error('Invalid token', err);
             res.status(401).send(null);
-        };
+        }
     });
 };
 
