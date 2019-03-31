@@ -7,6 +7,8 @@ require('dotenv').load();
 const { db, IsolationLevel } = require('./db');
 
 async function main() {
+    console.log('Inserting candidates');
+
     const filePath = 'data/electionPlatforms.json'
     const data = JSON.parse((await readFile(filePath)));
 
@@ -14,6 +16,7 @@ async function main() {
     const insertCandidateQuery = 'INSERT INTO candidates (name, position_id, platform_en, platform_fr) VALUES ($1, $2, $3, $4);';
     db.transaction(IsolationLevel.ReadUncommitted, client => {
         Object.keys(data).forEach(async (positionName) => {
+            console.log(`Inserting "${positionName}"`);
             const { rows: [{ id: positionId }] } = await client.query(insertPositionQuery, [positionName]);
             data[positionName] = [
                 ...data[positionName],
