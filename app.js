@@ -22,10 +22,14 @@ app.use(cookieParser());
 
 app.get('/ping', (req, res) => res.send('pong'));
 app.get('/can-vote', (req, res) => {
-    if (dayjs().isAfter(dayjs(process.env.START_TIME)) && dayjs().isBefore(dayjs(process.env.END_TIME))) {
+    const currentTime = dayjs();
+    if (currentTime.isAfter(dayjs(process.env.START_TIME)) && currentTime.isBefore(dayjs(process.env.END_TIME))) {
         res.status(200).send(null);
     } else {
-        res.status(412).send(null);
+        res.status(412).json({
+            notStarted: currentTime.isBefore(dayjs(process.env.START_TIME)),
+            isClosed: currentTime.isAfter(dayjs(process.env.END_TIME)),
+        });
     }
 });
 
