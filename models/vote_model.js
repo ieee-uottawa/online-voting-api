@@ -1,7 +1,7 @@
 const { db, IsolationLevel } = require('../db');
 
 module.exports.getCandidates = async () => {
-    const { rows } = await db.query('SELECT c.id, c.name, p.name AS position, c.platform FROM candidates c JOIN positions p ON c.position_id = p.id;');
+    const { rows } = await db.query('SELECT c.id, c.name, p.name AS position, c.platform_en, c.platform_fr FROM candidates c JOIN positions p ON c.position_id = p.id;');
     return rows.reduce((obj, row) => {
         const key = row.position;
         const arr = obj[key] || [];
