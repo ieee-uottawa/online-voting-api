@@ -13,7 +13,7 @@ async function main() {
     const data = JSON.parse((await readFile(filePath)));
 
     const insertPositionQuery = 'INSERT INTO positions (name) VALUES ($1) RETURNING id;'
-    const insertCandidateQuery = 'INSERT INTO candidates (name, position_id, platform_en, platform_fr) VALUES ($1, $2, $3, $4);';
+    const insertCandidateQuery = 'INSERT INTO candidates (name, position_id) VALUES ($1, $2);';
     db.transaction(IsolationLevel.ReadUncommitted, client => {
         Object.keys(data).forEach(async (positionName) => {
             console.log(`Inserting "${positionName}"`);
@@ -24,7 +24,7 @@ async function main() {
                 { name: 'No Confidence', platform: {} },
             ]
             await Promise.all(
-                data[positionName].map(({ name, platform: { en: enPlatform, fr: frPlatform } }) => client.query(insertCandidateQuery, [name, positionId, enPlatform, frPlatform]))
+                data[positionName].map(({ name }) => client.query(insertCandidateQuery, [name, positionId]))
             );
         });
     });
