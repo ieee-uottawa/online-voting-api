@@ -5,7 +5,7 @@ module.exports.getCandidates = async () => {
     return rows.reduce((obj, row) => {
         const key = row.position;
         const arr = obj[key] || [];
-        delete row[key];
+        // delete row[key];
 
         arr.push(row);
         obj[key] = arr;
