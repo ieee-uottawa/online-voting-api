@@ -7,7 +7,7 @@ require('dotenv').load();
 const { db, IsolationLevel } = require('./db');
 
 async function main() {
-    const filePath = '../React/ieee-uottawa-website/src/data/electionPlatforms.json'
+    const filePath = 'data/electionPlatforms.json'
     const data = JSON.parse((await readFile(filePath)));
 
     const insertPositionQuery = 'INSERT INTO positions (name) VALUES ($1) RETURNING id;'
