@@ -7,6 +7,10 @@ require('dotenv').load();
 const { db, IsolationLevel } = require('./db');
 
 async function main() {
+    console.log('Resetting candidate tables');
+    await db.query('DELETE FROM candidates;');
+    await db.query('DELETE FROM positions;');
+
     console.log('Inserting candidates');
 
     const filePath = 'data/electionPlatforms.json'
@@ -20,8 +24,8 @@ async function main() {
             const { rows: [{ id: positionId }] } = await client.query(insertPositionQuery, [positionName]);
             data[positionName] = [
                 ...data[positionName],
-                { name: 'Abstain', platform: {} },
-                { name: 'No Confidence', platform: {} },
+                { name: 'Abstain' },
+                { name: 'No Confidence' },
             ]
             await Promise.all(
                 data[positionName].map(({ name }) => client.query(insertCandidateQuery, [name, positionId]))
