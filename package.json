@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon %NODE_DEBUG_OPTION% ./bin/www",
-    "migrate": "node %NODE_DEBUG_OPTION% migrations/run_migrations.js"
+    "start": "nodemon ./bin/www",
+    "migrate": "node migrations/run_migrations.js",
+    "setup": "node candidateInsertion.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
