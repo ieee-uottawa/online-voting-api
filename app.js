@@ -29,9 +29,11 @@ app.get('/can-vote', (req, res) => {
     if (currentTime.isAfter(startTime) && currentTime.isBefore(endTime)) {
         res.status(200).send(null);
     } else {
+        const date = currentTime.isBefore(startTime) ? startTime : endTime
         res.status(412).json({
             notStarted: currentTime.isBefore(startTime),
             isClosed: currentTime.isAfter(endTime),
+            date,
         });
     }
 });
