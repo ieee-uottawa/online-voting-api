@@ -63,6 +63,6 @@ typings/
 credentials.json
 kubernetes/db-secret.yaml
 secrets
-data/votingCandidates.json
+data
 cloudflare.key
 cloudflare.pem

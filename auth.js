@@ -35,6 +35,12 @@ const validateToken = (req, res, next) => {
 module.exports.validateToken = validateToken;
 
 const validateUser = async (email, res, next) => {
+    const isValidUser = await userModel.isValidUser(email);
+    if (!isValidUser) {
+        console.log(`Invalid user ${email}`);
+        return res.status(403).send(null);
+    }
+
     const hasVoted = await userModel.hasUserVoted(email);
     if (hasVoted) {
         console.log(`User ${email} has already voted!`);
