@@ -13,7 +13,7 @@ async function main() {
 
     console.log('Inserting candidates');
 
-    const filePath = 'data/electionPlatforms.json'
+    const filePath = 'data/votingCandidates.json'
     const data = JSON.parse((await readFile(filePath)));
 
     const insertPositionQuery = 'INSERT INTO positions (name) VALUES ($1) RETURNING id;'
