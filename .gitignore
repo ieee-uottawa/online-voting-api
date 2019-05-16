@@ -63,3 +63,6 @@ typings/
 credentials.json
 kubernetes/db-secret.yaml
 secrets
+
+cloudflare.key
+cloudflare.pem
