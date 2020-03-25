@@ -19,5 +19,8 @@
     "jsonwebtoken": "^8.4.0",
     "morgan": "~1.9.0",
     "pg": "^7.8.0"
+  },
+  "devDependencies": {
+    "sync-dotenv": "^2.4.0"
   }
 }
