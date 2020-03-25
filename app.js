@@ -8,7 +8,7 @@ const Sentry = require('@sentry/node');
 
 const canVote = require('./canVote');
 
-const domains = ['http://localhost:3000', 'https://vote.ieeeuottawa.ca'];
+const domains = ['http://localhost:3000', process.env.PROD_URL];
 const app = express();
 const corsOptions = {
     origin: domains,
