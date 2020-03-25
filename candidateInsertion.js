@@ -14,36 +14,49 @@ async function main() {
     console.log('Inserting candidates');
 
     let filePath = 'data/votingCandidates.json';
-    let data = JSON.parse((await readFile(filePath)));
+    const candidateData = JSON.parse((await readFile(filePath)));
 
     const insertPositionQuery = 'INSERT INTO positions (name) VALUES ($1) RETURNING id;'
     const insertCandidateQuery = 'INSERT INTO candidates (name, position_id) VALUES ($1, $2);';
-    db.transaction(IsolationLevel.ReadUncommitted, (client) => {
-        Object.keys(data).forEach(async (positionName) => {
-            console.log(`Inserting "${positionName}"`);
-            const { rows: [{ id: positionId }] } = await client.query(insertPositionQuery, [positionName]);
-            data[positionName] = [
-                ...data[positionName],
-                { name: 'Abstain' },
-                { name: 'No Confidence' },
-            ]
+    const updatePositionNameQuery = 'UPDATE positions SET name = $1 WHERE id = $2;';
+    db.transaction(IsolationLevel.ReadUncommitted, async (client) => {
+        for (let position of Object.keys(candidateData)) {
+            console.log(`Inserting "${position}"`);
+            const { rows: [{ id: positionId }] } = await client.query(insertPositionQuery, [position]);
+            if (candidateData[position].length > 1) {
+                candidateData[position] = [
+                    ...candidateData[position],
+                    { name: 'Abstain' },
+                    { name: 'No Confidence' },
+                ];
+            } else if (candidateData[position].length === 1) {
+                position = `${position} - ${candidateData[position][0].name}`;
+                candidateData[position] = [
+                    { name: 'Yes' },
+                    { name: 'No' },
+                    { name: 'Abstain' },
+                ];
+                await client.query(updatePositionNameQuery, [position, positionId]);
+            } else {
+                console.log(`Ignoring ${position}, no candidates`);
+            }
             await Promise.all(
-                data[positionName].map(({ name }) => client.query(insertCandidateQuery, [name, positionId]))
+                candidateData[position].map(({ name }) => client.query(insertCandidateQuery, [name, positionId]))
             );
-        });
+        }
     });
 
-    if (Boolean(process.env.VALIDATE_USERS)) {
+    if (process.env.VALIDATE_USERS === 'true') {
         console.log('Resetting valid voter table');
         await db.query('DELETE FROM valid_users;');
 
         filePath = 'data/voters.json';
-        data = JSON.parse((await readFile(filePath)));
+        const voterData = JSON.parse((await readFile(filePath)));
 
         const insertUserQuery = 'INSERT INTO valid_users (email) VALUES ($1);';
         db.transaction(IsolationLevel.ReadUncommitted, async (client) => {
             console.log('Inserting valid voters');
-            await Promise.all(data.map(email => client.query(insertUserQuery, [email])));
+            await Promise.all(voterData.map(email => client.query(insertUserQuery, [email])));
         });
     }
 }
