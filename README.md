@@ -7,5 +7,6 @@ The purpose of this platform is to provide an easy, secure and anonymous voting 
 </p>
 
 # How to use it?
-Please contact Rushil Perera for an appointment
+Please contact Rushil Perera or Nevin WS Ganesan for an appointment.
 
+[webmaster@ieeeuottawa.ca](mailto:webmaster@ieeeuottawa.ca?subject=[GitHub]%20Source%20Han%20Sans)
