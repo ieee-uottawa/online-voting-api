@@ -7,6 +7,11 @@ The purpose of this platform is to provide an easy, secure and anonymous voting 
 </p>
 
 # How to use it?
-Please contact Rushil Perera or Nevin WS Ganesan for an appointment.
+
+## Deploy
+
+* [On DigitalOcean](./docs/deployment/DigitalOcean.md)
+
+Please contact Ryan Fleck, Nevin WS Ganesan, Rushil Perera for an appointment.
 
 [webmaster@ieeeuottawa.ca](mailto:webmaster@ieeeuottawa.ca?subject=[GitHub]%20Source%20Han%20Sans)
